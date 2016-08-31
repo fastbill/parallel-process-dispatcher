@@ -1,0 +1,30 @@
+{
+    "name": "fastbill/parallel-process-dispatcher",
+    "description": "module for running cli-processes in parallel",
+    "authors": [
+        {
+            "name": "Holger Segnitz",
+            "email": "hsegnitz@fastbill.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4,<8.0-DEV"
+    },
+    "autoload": {
+        "psr-4": {
+            "FastBill\\ParallelProcessDispatcher\\": "src/FastBill/ParallelProcessDispatcher"
+        }
+    },
+    "include-path": [
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "*",
+        "jakub-onderka/php-parallel-lint": "*",
+        "phploc/phploc": "*",
+        "pdepend/pdepend": "*",
+        "phpmd/phpmd": "*",
+        "squizlabs/php_codesniffer": "*",
+        "sebastian/phpcpd": "*",
+        "theseer/phpdox": "*"
+    }
+}

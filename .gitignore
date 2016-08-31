@@ -1,0 +1,8 @@
+/vendor/
+/.idea/
+/build/api/*
+/build/coverage/*
+/build/logs/*
+/build/pdepend/*
+/build/phpdox/*
+
