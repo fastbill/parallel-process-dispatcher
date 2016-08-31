@@ -18,6 +18,9 @@ class Process
 	const READ  = 'r';
 	const WRITE = 'w';
 
+	/** @var bool */
+	protected $nonblockingMode = false;
+
 	/** @var string */
 	protected $command = '';
 
@@ -100,8 +103,11 @@ class Process
 		$status = proc_get_status($this->process);
 
 		if ($status['running']) {
-			stream_set_blocking($this->stdout, false);
-			stream_set_blocking($this->stderr, false);
+			if (! $this->nonblockingMode) {
+				stream_set_blocking($this->stdout, false);
+				stream_set_blocking($this->stderr, false);
+				$this->nonblockingMode = true;
+			}
 			$this->output      .= stream_get_contents($this->stdout);
 			$this->errorOutput .= stream_get_contents($this->stderr);
 			return false;
