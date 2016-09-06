@@ -66,7 +66,7 @@ class Dispatcher
 				unset ($this->runningProcesses[$procId]);
 			}
 
-			usleep(100);
+			usleep(1000);
 		}
 	}
 
