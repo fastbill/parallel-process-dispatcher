@@ -14,9 +14,9 @@ class Dispatcher
 	private $finishedProcesses = [];
 
 	/** @var int number of maximum parallel running processes */
-	private $maxProcesses = 4;
+	private $maxProcesses = 2;
 
-	public function __construct($maxProcesses = 4)
+	public function __construct($maxProcesses = 2)
 	{
 		if ($maxProcesses < 1) {
 			throw new \InvalidArgumentException('number of processes must be at least 1');
