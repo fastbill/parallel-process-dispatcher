@@ -47,6 +47,7 @@ class Process
 
 	/**
 	 * @param string $command
+     * @param string $name
 	 * @throws \RuntimeException
 	 */
 	public function __construct($command, $name = '')
