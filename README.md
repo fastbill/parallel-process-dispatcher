@@ -28,3 +28,20 @@ composer.json:
     }
 }
 ```
+## Known Issues
+
+### Process
+
+* PHP Internals: Be aware that if the child process produces output, it will write into a buffer until the buffer is
+full. If the buffer is full the child pauses until the parent reads from the buffer and makes more room. This is done
+in the isFinished() method. The dispatcher calls this method periodically to prevent a deadlock. If you use the process
+class standalone, you have to possibilities to prevent this:
+  * call isFinished() yourself in either a loop, using a tick function or otherwise during execution of your script
+  * instead of writing to stdOut, divert output to a temporary file and use its output.
+  
+### Dispatcher
+
+* Multiple dispatchers (in different processes) are not aware of each other. So if you have a script that uses a
+dispatcher to call another script which itself uses a dispatcher to spawn multiple processes, you will end up with more
+child processes than the maximum, so choose the maximum accordingly or use a queue (e.g. Redis) and make the workers
+aware of each other by e.g. registering in a redis-stack for running workers.
