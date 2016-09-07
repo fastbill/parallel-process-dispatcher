@@ -28,6 +28,73 @@ composer.json:
     }
 }
 ```
+
+## Usage
+
+### Classes
+
+#### Process
+
+```php
+$process = new Process('pngcrush --brute background.png');
+$process->start();
+while (! $process->isFinished() ) {
+    usleep(1000); //wait 1ms until next poll
+}
+echo $process->getOutput();
+```
+
+#### Dispatcher
+
+```php
+$process1 = new Process('pngcrush --brute background.png');
+$process2 = new Process('pngcrush --brute welcome.png'); 
+
+$dispatcher = new Dispatcher(2);
+$dispatcher->addProcess($process1);
+$dispatcher->addProcess($process2);
+
+$dispatcher->dispatch();  // this will run until all processes are finished.
+
+$processes = $dispatcher->getFinishedProcesses();
+
+// loop over results
+```
+
+### Advanced
+
+#### Using Process and Dispatcher to start multiple processes and later collect the results
+
+This is just an idea yet, will need a few little changes:
+
+```php
+$dispatcher = new Dispatcher(2);
+
+$process1 = new Process('pngcrush --brute background.png');
+$process1->start()
+$dispatcher->addProcess($process1);
+
+// [... more code ...]
+
+$process2 = new Process('pngcrush --brute welcome.png'); 
+$process2->start()
+$dispatcher->addProcess($process2);
+
+// [... more code ...]
+
+$dispatcher->dispatch();  // this will make the dispatcher wait until all the processes are finished, if they are still running
+
+$processes = $dispatcher->getFinishedProcesses();
+
+// loop over results
+```
+
+## Ideas
+
+* Make another dispatcher for in-application-threading. Differences: no "dispatch()"-Loop, just internals which are triggered
+once each time the instance is being interacted with.
+
+
 ## Known Issues
 
 ### Process
