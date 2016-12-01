@@ -26,10 +26,18 @@ class Dispatcher
 
 	/**
 	 * @param Process $process
+	 * @param boolean $start if $start is true, after pushing the process to the queue, the running-processes-stack is checked for finished jobs and new
+	 *                       ones will be taken from the queue until the maximum is reached.
 	 */
-	public function addProcess(Process $process)
+	public function addProcess(Process $process, $start = false)
 	{
 		$this->processQueue[] = $process;
+
+		if ($start) {
+			$this->checkAndRemoveFinishedProcessesFromStack();
+			$this->fillRunningStackAndStartJobs();
+			$this->checkAndRemoveFinishedProcessesFromStack();
+		}
 	}
 
 	/**
@@ -39,34 +47,10 @@ class Dispatcher
 	public function dispatch()
 	{
 		while ($this->hasProcessesInQueue() || $this->hasRunningProcesses()) {
-			if ($this->hasProcessesInQueue() && count($this->runningProcesses) < $this->maxProcesses) {
-				// get process from queue
-				/** @var Process $proc */
-				$proc = array_shift($this->processQueue);
-
-				// start process
-				$proc->start();
-
-				// move to runningStack
-				$this->runningProcesses[] = $proc;
-			}
-
-			// check all running processes if they are still running,
-			$finishedProcIds = [];
-			foreach ($this->runningProcesses as $key => $proc) {
-				// if one is finished, move to finishedProcesses
-				if ($proc->isFinished()) {
-					$finishedProcIds[] = $key;
-					$this->finishedProcesses[] = $proc;
-				}
-			}
-
-			// remove the finished ones from the running stack (has to be outside of loop
-			foreach ($finishedProcIds as $procId) {
-				unset ($this->runningProcesses[$procId]);
-			}
-
-			usleep(1000);
+			$this->fillRunningStackAndStartJobs();
+			usleep(500);
+			$this->checkAndRemoveFinishedProcessesFromStack();
+			usleep(500);
 		}
 	}
 
@@ -93,5 +77,50 @@ class Dispatcher
 	public function getFinishedProcesses()
 	{
 		return $this->finishedProcesses;
+	}
+
+	/**
+	 *
+	 */
+	protected function checkAndRemoveFinishedProcessesFromStack()
+	{
+		// check all running processes if they are still running,
+		$finishedProcIds = [];
+		foreach ($this->runningProcesses as $key => $runningProc) {
+			// if one is finished, move to finishedProcesses
+			if ($runningProc->isFinished()) {
+				$finishedProcIds[] = $key;
+				$this->finishedProcesses[] = $runningProc;
+			}
+		}
+
+		// remove the finished ones from the running stack (has to be outside of loop
+		foreach ($finishedProcIds as $procId) {
+			unset ($this->runningProcesses[$procId]);
+		}
+	}
+
+	/**
+	 *
+	 */
+	protected function fillRunningStackAndStartJobs()
+	{
+		if (!$this->hasProcessesInQueue()) {
+			return;
+		}
+
+		while (count($this->runningProcesses) < $this->maxProcesses) {
+			// get process from queue
+			/** @var Process $proc */
+			$proc = array_shift($this->processQueue);
+
+			// start process
+			$proc->start();
+
+			// move to runningStack
+			$this->runningProcesses[] = $proc;
+
+			usleep (100);
+		}
 	}
 }
