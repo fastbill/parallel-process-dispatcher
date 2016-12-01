@@ -105,11 +105,7 @@ class Dispatcher
 	 */
 	protected function fillRunningStackAndStartJobs()
 	{
-		if (!$this->hasProcessesInQueue()) {
-			return;
-		}
-
-		while (count($this->runningProcesses) < $this->maxProcesses) {
+		while ($this->hasProcessesInQueue() && count($this->runningProcesses) < $this->maxProcesses) {
 			// get process from queue
 			/** @var Process $proc */
 			$proc = array_shift($this->processQueue);
