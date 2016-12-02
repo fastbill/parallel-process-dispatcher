@@ -119,4 +119,13 @@ class Dispatcher
 			usleep (100);
 		}
 	}
+
+	/**
+	 * This lets the running processes finish after the main program went through.
+	 */
+	public function __destruct()
+	{
+		$this->dispatch();
+	}
+
 }
