@@ -34,9 +34,7 @@ class Dispatcher
 		$this->processQueue[] = $process;
 
 		if ($start) {
-			$this->checkAndRemoveFinishedProcessesFromStack();
-			$this->fillRunningStackAndStartJobs();
-			$this->checkAndRemoveFinishedProcessesFromStack();
+			$this->tick();
 		}
 	}
 
@@ -52,6 +50,17 @@ class Dispatcher
 			$this->checkAndRemoveFinishedProcessesFromStack();
 			usleep(500);
 		}
+	}
+
+	/**
+	 * advances the queue without blocking - this can/should be run from time to time to flush buffers
+	 * and start more jobs if others had finished.
+	 */
+	public function tick()
+	{
+		$this->checkAndRemoveFinishedProcessesFromStack();
+		$this->fillRunningStackAndStartJobs();
+		$this->checkAndRemoveFinishedProcessesFromStack();
 	}
 
 	/**
