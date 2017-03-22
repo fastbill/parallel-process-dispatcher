@@ -1,6 +1,6 @@
 # fastbill/parallel-process-dispatcher
 
-## Version: 1.0.3
+## Version: 1.2.0
 
 ## Overview
 
@@ -65,20 +65,22 @@ $processes = $dispatcher->getFinishedProcesses();
 
 #### Using Process and Dispatcher to start multiple processes and later collect the results
 
-This is just an idea yet, will need a few little changes:
-
 ```php
 $dispatcher = new Dispatcher(2);
 
 $process1 = new Process('pngcrush --brute background.png');
-$process1->start()
-$dispatcher->addProcess($process1);
+$dispatcher->addProcess($process1, true);   // true starts the process if there are still free slots
 
 // [... more code ...]
 
 $process2 = new Process('pngcrush --brute welcome.png'); 
-$process2->start()
-$dispatcher->addProcess($process2);
+$dispatcher->addProcess($process2, true);
+
+// [... more code ...]
+
+// during code execution, the dispatcher cannot remove finished processes from the stack, so you have to call the tick()-function
+// if you want the queue to advance - but it's optional since at latest the __destruct() function will call dispatch(); 
+$dispatcher->tick();
 
 // [... more code ...]
 
@@ -89,10 +91,8 @@ $processes = $dispatcher->getFinishedProcesses();
 // loop over results
 ```
 
-## Ideas
 
-* Make another dispatcher for in-application-threading. Differences: no "dispatch()"-Loop, just internals which are triggered
-once each time the instance is being interacted with.
+
 
 
 ## Known Issues
