@@ -41,14 +41,15 @@ class Dispatcher
 	/**
 	 * this works over the whole queue and starts maxProcesses processes in parallel.
 	 * returns if all are through.
+	 * @param int $checkIntervalMicroseconds
 	 */
-	public function dispatch()
+	public function dispatch($checkIntervalMicroseconds = 1000)
 	{
 		while ($this->hasProcessesInQueue() || $this->hasRunningProcesses()) {
 			$this->fillRunningStackAndStartJobs();
-			usleep(500);
+			usleep($checkIntervalMicroseconds / 2);
 			$this->checkAndRemoveFinishedProcessesFromStack();
-			usleep(500);
+			usleep($checkIntervalMicroseconds / 2);
 		}
 	}
 
