@@ -12,7 +12,7 @@ The other is a multi-process-dispatcher which takes an arbitrary number of befor
 
 ### Installation:
 
-composer.json:
+Add the following to your `composer.json`:
 ```js
 {
     "repositories": [{
@@ -20,7 +20,7 @@ composer.json:
         "url": "git@git2.fastbill.com:shared/parallel-process-dispatcher.git"
     }],
     "require": {
-        "fastbill/parallel-process-dispatcher": "~1.0"
+        "fastbill/parallel-process-dispatcher": "~1.2"
     }
 }
 ```
