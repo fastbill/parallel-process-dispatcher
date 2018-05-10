@@ -23,8 +23,8 @@ Add the following to your `composer.json`:
 
 or just run the following command in your project root directory
 
-```
-# composer require "fastbill/parallel-process-dispatcher"
+```sh
+$ composer require "fastbill/parallel-process-dispatcher"
 ```
 
 ## Usage
