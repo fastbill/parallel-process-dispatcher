@@ -17,13 +17,15 @@ Add the following to your `composer.json`:
 {
     "repositories": [{
         "type": "git",
-        "url": "git@git2.fastbill.com:shared/parallel-process-dispatcher.git"
+        "url": "git@github.com:fastbill/parallel-process-dispatcher.git"
     }],
     "require": {
-        "fastbill/parallel-process-dispatcher": "~1.2"
+        "fastbill/parallel-process-dispatcher": "*"
     }
 }
 ```
+
+(packagist.org coming next)
 
 ## Usage
 
@@ -34,6 +36,9 @@ Add the following to your `composer.json`:
 ```php
 $process = new Process('pngcrush --brute background.png');
 $process->start();
+
+// optional: do something else in your application
+
 while (! $process->isFinished() ) {
     usleep(1000); //wait 1ms until next poll
 }
@@ -45,16 +50,20 @@ echo $process->getOutput();
 ```php
 $process1 = new Process('pngcrush --brute background.png');
 $process2 = new Process('pngcrush --brute welcome.png'); 
+$process3 = new Process('pngcrush --brute logo.png'); 
 
-$dispatcher = new Dispatcher(2);
+$dispatcher = new Dispatcher(2);    // will make sure only two of those will actually run at the same time
 $dispatcher->addProcess($process1);
 $dispatcher->addProcess($process2);
+$dispatcher->addProcess($process3);
 
 $dispatcher->dispatch();  // this will run until all processes are finished.
 
 $processes = $dispatcher->getFinishedProcesses();
 
-// loop over results
+foreach ($processes as $process) {
+    echo $process->getOutput(), "\n\n";
+}
 ```
 
 ### Advanced
@@ -100,7 +109,7 @@ full. If the buffer is full the child pauses until the parent reads from the buf
 in the isFinished() method. The dispatcher calls this method periodically to prevent a deadlock. If you use the process
 class standalone, you have to possibilities to prevent this:
   * call isFinished() yourself in either a loop, using a tick function or otherwise during execution of your script
-  * instead of writing to stdOut, divert output to a temporary file and use its output.
+  * instead of writing to stdOut, divert output to a temporary file and use its name as output.
   
 ### Dispatcher
 

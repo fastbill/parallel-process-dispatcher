@@ -1,12 +1,15 @@
 {
     "name": "fastbill/parallel-process-dispatcher",
     "description": "module for running cli-processes in parallel",
+    "type": "library",
+    "license": "MIT",
     "authors": [
         {
             "name": "Holger Segnitz",
             "email": "hsegnitz@fastbill.com"
         }
     ],
+    "readme": "README.md",
     "require": {
         "php": ">=5.6"
     },
@@ -15,8 +18,6 @@
             "FastBill\\ParallelProcessDispatcher\\": "src/FastBill/ParallelProcessDispatcher"
         }
     },
-    "include-path": [
-    ],
     "require-dev": {
         "phpunit/phpunit": "*",
         "jakub-onderka/php-parallel-lint": "*",
