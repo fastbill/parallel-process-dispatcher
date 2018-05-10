@@ -1,6 +1,6 @@
 {
     "name": "fastbill/parallel-process-dispatcher",
-    "description": "module for running cli-processes in parallel",
+    "description": "Tiny PHP library for running jobs in background and/or in parallel",
     "type": "library",
     "license": "MIT",
     "authors": [
