@@ -52,7 +52,7 @@ $process1 = new Process('pngcrush --brute background.png');
 $process2 = new Process('pngcrush --brute welcome.png'); 
 $process3 = new Process('pngcrush --brute logo.png'); 
 
-$dispatcher = new Dispatcher(2);    // will make sure only two of those will actually run
+$dispatcher = new Dispatcher(2);    // will make sure only two of those will actually run at the same time
 $dispatcher->addProcess($process1);
 $dispatcher->addProcess($process2);
 $dispatcher->addProcess($process3);
